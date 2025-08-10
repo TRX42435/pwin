@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PWiN – Polska Wolna i Niepodległa</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f5f5f5;
+        color: #222;
+    }
+    nav {
+        background: linear-gradient(to right, #d60000, #ff0000);
+        padding: 15px 20px;
+        text-align: center;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.15em;
+        margin: 0 30px;
+        position: relative;
+        padding-bottom: 5px;
+        display: inline-block;
+        cursor: pointer;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+    nav a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 0;
+        background: #ffd700;
+        transform: skew(-15deg);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+        z-index: -1;
+    }
+    nav a:hover::after {
+        width: 75%;
+    }
+    nav a:hover {
+        color: white;
+        transform: scale(1.1);
+    }
+    .hero {
+        background: linear-gradient(to right, #d60000, #ff0000);
+        color: white;
+        padding: 60px 20px 40px 20px;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .hero h1 {
+        font-size: 2.8em;
+        margin-bottom: 10px;
+    }
+    .hero .motto {
+        font-style: italic;
+        opacity: 0.85;
+        margin: 0;
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+    .party-description {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 0 20px;
+        font-size: 1.25em;
+        font-weight: 700;
+        color: #d60000;
+        text-align: center;
+        line-height: 1.5em;
+    }
+    .posts {
+        max-width: 900px;
+        margin: 40px auto 80px auto;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    .post {
+        background-color: transparent;
+        border: 3px solid #d60000;
+        padding: 25px 30px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.3em;
+        color: #d60000;
+        cursor: default;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .post:hover {
+        transform: scale(1.07);
+        box-shadow: 0 6px 15px rgba(214, 0, 0, 0.4);
+    }
+    .cta {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    .cta a {
+        background: #d60000;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-weight: 900;
+        font-size: 1.4em;
+        text-decoration: none;
+        display: inline-block;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        border: 3px solid #d60000;
+    }
+    .cta a:hover {
+        background: #ffd700;
+        color: #222;
+        transform: scale(1.1);
+        border-color: #ffd700;
+    }
+    footer {
+        background: #d60000;
+        color: white;
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+        font-weight: 700;
+        box-sizing: border-box;
+        user-select: none;
+        font-size: 1.1em;
+        margin-top: 50px;
+    }
+
+    /* Akordeon program */
+    #program {
+        max-width: 900px;
+        margin: 40px auto 80px auto;
+        padding: 0 20px 40px 20px;
+    }
+    .accordion-item {
+        border: 2px solid #d60000;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        background: white;
+        overflow: hidden;
+        box-shadow: 0 0 8px rgba(214, 0, 0, 0.15);
+    }
+    .accordion-header {
+        width: 100%;
+        background-color: #d60000;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2em;
+        padding: 15px 20px;
+        text-align: left;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.3s ease;
+        user-select: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .accordion-header:hover,
+    .accordion-header[aria-expanded="true"] {
+        background-color: #a50000;
+    }
+    .accordion-header::after {
+        content: "+";
+        font-size: 1.4em;
+        transition: transform 0.3s ease;
+    }
+    .accordion-header[aria-expanded="true"]::after {
+        content: "−";
+        transform: rotate(180deg);
+    }
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        background-color: white;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        padding: 0 20px;
+        font-weight: 500;
+        font-size: 1em;
+        color: #222;
+        line-height: 1.5em;
+    }
+    .accordion-content p {
+        margin: 15px 0;
+    }
+    .accordion-content ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+        list-style: disc inside;
+    }
+
+    /* Członkowie Partii */
+    #czlonkowie {
+        max-width: 900px;
+        margin: 40px auto 80px auto;
+        padding: 0 20px 40px 20px;
+        text-align: center;
+    }
+    #czlonkowie h2 {
+        color: #d60000;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+    .member-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+    }
+    .member-card {
+        background: white;
+        border: 3px solid #d60000;
+        border-radius: 12px;
+        width: 220px;
+        box-shadow: 0 4px 10px rgba(214, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: default;
+    }
+    .member-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(214, 0, 0, 0.4);
+    }
+    .member-photo {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-top-left-radius: 9px;
+        border-top-right-radius: 9px;
+        background: #eee url('https://via.placeholder.com/220x220?text=Zdjęcie') center center no-repeat;
+        background-size: cover;
+    }
+    .member-info {
+        padding: 15px 12px 20px 12px;
+        text-align: left;
+        color: #d60000;
+        font-weight: 700;
+    }
+    .member-info h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.2em;
+        color: #a50000;
+    }
+    .member-info p {
+        margin: 4px 0;
+        font-weight: 600;
+        font-size: 0.95em;
+        color: #660000;
+    }
+
+    /* Responsywność */
+    @media (max-width: 700px) {
+        .member-grid {
+            flex-direction: column;
+            align-items: center;
+        }
+        .member-card {
+            width: 90%;
+            max-width: 320px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<nav>
+    <a href="#" onclick="showSection('home'); return false;">Strona Główna</a>
+    <a href="#" onclick="showSection('program'); return false;">Program</a>
+    <a href="#" onclick="showSection('czlonkowie'); return false;">Członkowie Partii</a>
+</nav>
+
+<div class="hero">
+    <h1>Polska Wolna i Niepodległa</h1>
+    <p class="motto">„Suwerenność, Tradycja, Siła Narodu”</p>
+</div>
+
+<section id="home" class="content-section">
+    <div class="party-description">
+        Partia Polska Wolna i Niepodległa (PWiN) to ruch polityczny, który stawia na suwerenność narodową, ochronę tradycyjnych wartości oraz rozwój gospodarczy oparty na wsparciu polskich przedsiębiorców i rolników. Naszym celem jest przywrócenie pełnej kontroli nad granicami i prawem, co pozwoli Polsce zachować niezależność i suwerenność w obliczu globalnych wpływów.
+        Wierzymy w ochronę rodziny jako fundamentu społeczeństwa oraz w promocję patriotycznej edukacji, która kształtuje dumę z polskiej historii i kultury. PWiN walczy o bezpieczne granice, skuteczną ochronę obywateli oraz rozwój nowoczesnej, silnej armii.
+        Nasza partia sprzeciwia się nadmiernej dominacji zagranicznych korporacji na rynku, dążąc do rozwoju polskiej gospodarki opartej na własnych zasobach i talentach. Zapraszamy wszystkich, którzy chcą współtworzyć Polskę wolną, silną i niepodległą, dołączenia do naszego ruchu i aktywnego udziału w budowaniu lepszej przyszłości dla naszej ojczyzny.
+    </div>
+
+    <div class="posts">
+        <div class="post">🇵🇱 Polska dla Polaków! Pełna kontrola nad naszym prawem, granicami i przyszłością. Koniec z narzucaniem obcych decyzji!</div>
+        <div class="post">💪 Silna gospodarka - Niższe podatki dla przedsiębiorców, wsparcie polskich firm i ochrona rodzimego rynku.</div>
+        <div class="post">🛡 Bezpieczne granice - Silna armia, skuteczna policja i nowoczesne zabezpieczenia – bezpieczeństwo obywateli to priorytet.</div>
+        <div class="post">📜 Tradycja i wartości - Ochrona rodziny, kultury i historii – fundament naszej tożsamości.</div>
+        <div class="post">🌾 Wsparcie rolnictwa - Modernizacja wsi i ochrona polskich produktów rolnych przed zagraniczną konkurencją.</div>
+        <div class="post">🎓 Patriotyczna edukacja - Nauka historii, która buduje dumę narodową i szacunek dla naszych bohaterów.</div>
+    </div>
+
+    <div class="cta">
+        <a href="#" onclick="showSection('program'); return false;">Poznaj nasz program</a>
+    </div>
+</section>
+
+<section id="program" class="content-section" style="display:none;">
+    <h2 style="color:#d60000; font-weight:700; margin-bottom: 30px; text-align:center;">Program Partii PWiN</h2>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Suwerenność Narodowa</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Naszym celem jest pełna niezależność Polski na arenie międzynarodowej. Chcemy, aby decyzje dotyczące kraju były podejmowane wyłącznie przez Polaków, bez ingerencji zewnętrznych.</p>
+            <ul>
+                <li>Ograniczenie wpływu zagranicznych korporacji na polski rynek</li>
+                <li>Silna polityka graniczna i kontrola imigracji</li>
+                <li>Wzmocnienie polskich instytucji państwowych</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Gospodarka i Przedsiębiorczość</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Wspieramy polskich przedsiębiorców poprzez obniżenie podatków oraz uproszczenie procedur. Stawiamy na rozwój polskiej gospodarki opartej na rodzimych zasobach i innowacjach.</p>
+            <ul>
+                <li>Ulgi podatkowe dla małych i średnich firm</li>
+                <li>Wsparcie dla innowacyjnych start-upów</li>
+                <li>Ochrona polskiego rynku przed dumpingiem zagranicznym</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Bezpieczeństwo Wewnętrzne</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Wzmacniamy służby mundurowe, policję i wymiar sprawiedliwości, aby walczyć skutecznie z przestępczością i zagrożeniami terrorystycznymi. Wprowadzamy surowsze kary dla przestępców.</p>
+            <ul>
+                <li>Większe nakłady na policję i straż graniczną</li>
+                <li>Zaostrzenie kar za przestępstwa przeciwko bezpieczeństwu</li>
+                <li>Nowoczesne technologie w walce z przestępczością</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Ochrona Środowiska</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Dbamy o czystość naszych miast i wsi, promując rozwiązania ekologiczne zgodne z interesem Polski, nie narzucone z zewnątrz. Ochrona środowiska jest ważna, ale nie kosztem rozwoju gospodarczego.</p>
+            <ul>
+                <li>Wsparcie dla ekologicznego rolnictwa</li>
+                <li>Inwestycje w czystą energię z polskich źródeł</li>
+                <li>Ochrona polskich lasów i zasobów naturalnych</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Polityka Społeczna</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Wprowadzamy programy prorodzinne, wspieramy wielodzietne rodziny oraz osoby starsze. Nasza polityka społeczna ma na celu poprawę jakości życia każdego Polaka.</p>
+            <ul>
+                <li>Ulgi podatkowe i wsparcie finansowe dla rodzin</li>
+                <li>Lepszy dostęp do opieki zdrowotnej</li>
+                <li>Aktywna polityka senioralna i integracja społeczna</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Kultura i Edukacja</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Wzmacniamy polską kulturę i tradycję poprzez patriotyczną edukację oraz wspieranie polskiej sztuki i nauki. Kładziemy nacisk na wychowanie młodzieży w duchu patriotyzmu i odpowiedzialności za Ojczyznę.</p>
+            <ul>
+                <li>Reforma edukacji oparta na wartościach narodowych</li>
+                <li>Wsparcie dla polskich twórców i instytucji kultury</li>
+                <li>Promocja polskiego języka i historii</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Wsparcie Rolnictwa</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Modernizujemy wieś, wspieramy polskich rolników oraz chronimy polskie produkty rolne przed zagraniczną konkurencją nieuczciwą.</p>
+            <ul>
+                <li>Dotacje i programy wsparcia dla rolników</li>
+                <li>Promocja polskiej żywności na rynku krajowym i zagranicznym</li>
+                <li>Rozwój infrastruktury wiejskiej</li>
+            </ul>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">Polityka Imigracyjna</button>
+        <div class="accordion-content" aria-hidden="true">
+            <p>Kontrolujemy napływ imigrantów, stawiając na legalność i integrację zgodną z polską kulturą i wartościami.</p>
+            <ul>
+                <li>Weryfikacja legalności pobytu</li>
+                <li>Wsparcie dla Polaków na rynku pracy</li>
+                <li>Promowanie integracji imigrantów z polskim społeczeństwem</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="czlonkowie" class="content-section" style="display:none;">
+    <h2>Członkowie Partii</h2>
+    <div class="member-grid">
+        <div class="member-card">
+            <div class="member-photo" style="background-image: url('https://ibb.co/p6642jQM');"></div>
+            <div class="member-info">
+                <h3>Bogdan Berlinka</h3>
+                <p>Prezes Partii</p>
+                <p>Poseł na Sejm RP</p>
+                <p>Wiek: 38 lat</p>
+                <p>Data dołączenia: 09/08/2025</p>
+            </div>
+        </div>
+        <div class="member-card">
+            <div class="member-photo" style="background-image: url('https://via.placeholder.com/220x220?text=S.Kierczyński');"></div>
+            <div class="member-info">
+                <h3>Sławomir Kierczyński</h3>
+                <p>Prezes Partii</p>
+                <p>Poseł na Sejm RP</p>
+                <p>Wiek: 39 lat</p>
+                <p>Data dołączenia: 09/08/2025</p>
+            </div>
+        </div>
+        <div class="member-card">
+            <div class="member-photo" style="background-image: url('https://via.placeholder.com/220x220?text=J.Małaszyński');"></div>
+            <div class="member-info">
+                <h3>Jan Paweł Małaszyński</h3>
+                <p>Poseł na Sejm RP</p>
+                <p>Wiek: 54 lata</p>
+                <p>Data dołączenia: 09/08/2025</p>
+            </div>
+        </div>
+        <div class="member-card">
+            <div class="member-photo" style="background-image: url('https://via.placeholder.com/220x220?text=J.Doniczka');"></div>
+            <div class="member-info">
+                <h3>Janusz Doniczka</h3>
+                <p>Poseł na Sejm RP</p>
+                <p>Wiek: 40 lat</p>
+                <p>Data dołączenia: 09/08/2025</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(section => {
+            section.style.display = section.id === sectionId ? 'block' : 'none';
+        });
+        window.scrollTo(0, 0);
+    }
+
+    // Akordeon - rozwijanie / zwijanie
+    document.querySelectorAll('.accordion-header').forEach(button => {
+        button.addEventListener('click', () => {
+            const expanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', !expanded);
+            const content = button.nextElementSibling;
+            if (!expanded) {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.setAttribute('aria-hidden', 'false');
+            } else {
+                content.style.maxHeight = null;
+                content.setAttribute('aria-hidden', 'true');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
